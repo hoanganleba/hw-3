@@ -1,0 +1,6 @@
+export enum TruckType {
+  SPRINTER = 'SPRINTER',
+  SMALL = 'SMALL',
+  STRAIGHT = 'STRAIGHT',
+  LARGE_STRAIGHT = 'LARGE STRAIGHT',
+}
