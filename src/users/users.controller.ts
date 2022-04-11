@@ -8,20 +8,22 @@ import {
   Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 import { ChangeUserPasswordDto } from './dto/change-user-password.dto';
 
 @ApiTags('User')
 @Controller('users/me')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
   getProfile(@Req() req: Request) {
-    return this.usersService.getProfile(req);
+    const userId = (req.user as any).id;
+    return this.usersService.getProfile(userId);
   }
 
   @Patch('password')
@@ -29,11 +31,13 @@ export class UsersController {
     @Req() req: Request,
     @Body() changeUserPasswordDto: ChangeUserPasswordDto,
   ) {
-    return this.usersService.changePassword(req, changeUserPasswordDto);
+    const userId = (req.user as any).id;
+    return this.usersService.changePassword(userId, changeUserPasswordDto);
   }
 
   @Delete()
   deleteProfile(@Req() req: Request) {
-    return this.usersService.deleteProfile(req);
+    const userId = (req.user as any).id;
+    return this.usersService.deleteProfile(userId);
   }
 }

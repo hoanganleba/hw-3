@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/users/schemas/user.schema';
+import { User, UserDocument } from '../users/schemas/user.schema';
 import { RegisterCredentialDto } from './dto/registerCredential.dto';
 import { CredentialDto } from './dto/credential.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +38,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email and/or password');
     }
 
-    const payload = { id: user.id, email: user.email, role: user.role };
+    const payload = { id: user._id, email: user.email, role: user.role };
 
     return { jwt_token: this.jwtService.sign(payload) };
   }

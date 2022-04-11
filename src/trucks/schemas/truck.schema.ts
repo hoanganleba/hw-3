@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { User } from 'src/users/schemas/user.schema';
-import { TruckType } from 'src/enums/TruckType';
-import { TruckStatus } from 'src/enums/TruckStatus';
+import { User } from '../../users/schemas/user.schema';
+import { TruckType } from '../../enums/truckType.enum';
+import { TruckStatus } from '../../enums/truckStatus.enum';
 
 export type TruckDocument = Truck & Document;
 

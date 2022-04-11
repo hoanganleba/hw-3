@@ -1,22 +1,31 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
   Query,
+  Post,
+  Req,
+  Body,
+  Put,
+  Patch,
 } from '@nestjs/common';
 import { LoadsService } from './loads.service';
-import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { QueryLoadDto } from './dto/query-load.dto';
+import { Request } from 'express';
+import { CreateLoadDto } from './dto/create-load.dto';
+import { UpdateLoadDto } from './dto/update-load.dto';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../decorators/role.decorator';
+import { Role } from '../enums/role.enum';
 
 @ApiTags('Load')
 @Controller('loads')
-@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class LoadsController {
   constructor(private readonly loadsService: LoadsService) {}
 
@@ -26,12 +35,31 @@ export class LoadsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.loadsService.findOne(+id);
+  fetchLoad(@Param('id') id: string) {
+    return this.loadsService.fetchLoad(id);
+  }
+
+  @Post()
+  @Roles(Role.SHIPPER)
+  createLoad(@Req() req: Request, @Body() createLoadDto: CreateLoadDto) {
+    const userId = (req.user as any).id;
+    return this.loadsService.createLoad(userId, createLoadDto);
+  }
+
+  @Patch('active/state')
+  changeLoadState(@Req() req: Request) {
+    return this.loadsService.changeLoadState(req);
+  }
+
+  @Put(':id')
+  @Roles(Role.SHIPPER)
+  updateLoad(@Param('id') id: string, @Body() updateLoadDto: UpdateLoadDto) {
+    return this.loadsService.updateLoad(id, updateLoadDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.loadsService.remove(+id);
+  @Roles(Role.SHIPPER)
+  removeLoad(@Param('id') id: string) {
+    return this.loadsService.removeLoad(id);
   }
 }

@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { State } from 'src/enums/State';
-import { Status } from 'src/enums/Status';
-import { User } from 'src/users/schemas/user.schema';
+import { State } from '../../enums/state.enum';
+import { Status } from '../../enums/status.enum';
+import { User } from '../../users/schemas/user.schema';
 
 export type LoadDocument = Load & Document;
 
@@ -54,7 +54,7 @@ export class Load {
   @Prop({ required: true })
   dimensions: Dimensions;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: [] })
   logs: Array<Logs>;
 
   @Prop({ default: Date.now() })

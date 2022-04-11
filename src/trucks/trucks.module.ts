@@ -4,14 +4,10 @@ import { TrucksController } from './trucks.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Truck, TruckSchema } from './schemas/truck.schema';
 import { JwtModule } from '@nestjs/jwt';
-import { User, UserSchema } from 'src/users/schemas/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Truck.name, schema: TruckSchema },
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Truck.name, schema: TruckSchema }]),
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET_KEY,

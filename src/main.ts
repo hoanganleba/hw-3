@@ -5,7 +5,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  app.enableCors();
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('LAB FE NodeJS HW #3')
     .setVersion('1.0')
     .build();
